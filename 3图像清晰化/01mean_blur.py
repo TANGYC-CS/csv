@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 mpl.rcParams['font.sans-serif'] = ['SimHei', 'PingFang SC', 'Heiti TC', 'Microsoft YaHei']  # 正常显示中文
 mpl.rcParams['axes.unicode_minus'] = False  # 正常显示负号
 
+# 切换到脚本所在目录，保证相对路径在任意工作目录下都能用
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 # 均值滤波
 img = cv2.imread("picture/1.png", 1)  # 读取彩色图像
 dst = cv2.blur(

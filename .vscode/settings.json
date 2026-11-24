@@ -1,7 +1,5 @@
 {
-    "python.defaultInterpreterPath": "F:\\计算机视觉\\Python37\\python.exe",
-    "python-envs.defaultEnvManager": "ms-python.python:system",
-    "python.analysis.extraPaths": [
-        "./Python37/Lib/site-packages"
-    ]
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.terminal.activateEnvironment": true,
+    "python-envs.defaultEnvManager": "ms-python.python:venv"
 }
