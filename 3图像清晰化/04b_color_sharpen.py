@@ -130,7 +130,7 @@ ax_txt.text(0.01, 0.95,
 
 # 保存结果（方便无图形界面时查看）
 os.makedirs("save", exist_ok=True)
-plt.savefig("save/05color_sharpen_result.png", dpi=150, bbox_inches="tight")
+plt.savefig("save/color_sharpen_result.png", dpi=150, bbox_inches="tight")
 
 # 单独导出两张成品图（BGR，可直接被其他程序读取）
 cv2.imwrite("save/bg_sharp_strong.png", sharp_strong)   # 细节最强，偏灰白
