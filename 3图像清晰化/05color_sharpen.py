@@ -66,12 +66,16 @@ sharp_strong = cv2.cvtColor(
     cv2.merge([Y_strong, Cr, Cb]).astype("uint8"), cv2.COLOR_YCrCb2BGR)
 
 # 方案四（实用版）：温和拉伸 + 平滑后的梯度，保留原有色调
-# 1) 梯度先做 3×3 高斯平滑，避免把噪点也一起放大成白边（非锐化掩模的常见处理）
-grad_smooth = cv2.GaussianBlur(grad, (3, 3), 0)
-# 2) 只把亮度从 213~255 映射到 150~255，留出层次，不压成黑白
-Y_mild = np.clip((Y - 213.0) * (255.0 - 150.0) / (255.0 - 213.0) + 150.0, 0, 255)
+K_MILD = 3.0      # 锐化增益：想更锐调到 4~5，但亮部容易撞 255 变白、白边变硬
+# 1) 只把亮度从 213~255 映射到 150~255，留出层次，不压成黑白
+#    映射是线性的：Y_mild = 150 + (Y - 213) × scale，scale = 105 / 42 = 2.5
+scale = (255.0 - 150.0) / (255.0 - 213.0)
+Y_mild = np.clip(150.0 + (Y - 213.0) * scale, 0, 255)
+# 2) 梯度先做 3×3 高斯平滑，避免把噪点和细碎纹理一起放大成白边
+#    注意：亮度被放大了 scale 倍，梯度必须同步乘 scale，否则锐化强度会偏弱
+grad_mild = cv2.GaussianBlur(grad, (3, 3), 0) * scale
 # 3) 在拉伸后的亮度上叠加平滑梯度
-Y_final = np.clip(Y_mild + 3 * gradient_of(Y_mild), 0, 255)
+Y_final = np.clip(Y_mild + K_MILD * grad_mild, 0, 255)
 sharp_final = cv2.cvtColor(
     cv2.merge([Y_final, Cr, Cb]).astype("uint8"), cv2.COLOR_YCrCb2BGR)
 
